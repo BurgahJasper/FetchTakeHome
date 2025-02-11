@@ -73,6 +73,27 @@ The input configuration file must be in YAML format, containing a list of HTTP e
     user-agent: fetch-synthetic-monitor
 ```
 
+## Understanding the Results
+
+Each test cycle logs the availability percentage of each domain being monitored. The availability percentage is calculated as:
+
+```sh
+100 * (number of successful requests / total requests)
+```
+
+- A request is considered UP if the response status is between 200-299 and the latency is below 500ms.
+
+- A request is considered DOWN otherwise.
+
+- The cumulative percentage updates every 15 seconds and represents overall availability since the program started.
+
+Example output:
+
+```sh
+fetch.com has 67% availability percentage
+www.fetchrewards.com has 100% availability percentage
+```
+
 ## Stopping the Program
 
 To stop monitoring, press `CTRL + C` in the terminal.
