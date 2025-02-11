@@ -48,6 +48,14 @@ python monitor.py <config_file_path>
 python monitor.py endpoints.yaml
 ```
 
+## Debugging
+
+If there are doubts or you want to check the status, latency, or if the call is UP or DOWN, place this line of code at line 42 before the for loop
+
+```sh
+print(f"Checked {endpoint['name']} ({domain}) - Status: {status_code}, Latency: {latency:.2f} ms, {'UP' if is_up else 'DOWN'}")
+```
+
 ## Configuration File Format
 
 The input configuration file must be in YAML format, containing a list of HTTP endpoints with their properties. Example:
