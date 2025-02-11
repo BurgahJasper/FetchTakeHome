@@ -46,7 +46,7 @@ def main(file_path):
 
             time.sleep(15)
     except KeyboardInterrupt:
-        print("\nProgram terminated by user.")
+        print("\nProgram terminated by user")
         sys.exit(0)
 
 if __name__ == "__main__":
