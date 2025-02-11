@@ -14,37 +14,36 @@ def check_endpoint(endpoint):
     method = endpoint.get("method", "GET").upper()
     headers = endpoint.get("headers", {})
     body = endpoint.get("body", None)
-    
+
     start_time = time.time()
     try:
         response = requests.request(method, url, headers=headers, json=body if body else None, timeout=5)
         latency = (time.time() - start_time) * 1000  # Convert to ms
         
-        if 200 <= response.status_code < 300 and latency < 500:
-            return True
-    except requests.RequestException:
-        pass
-    
-    return False
+        is_up = 200 <= response.status_code < 300 and latency < 500
+        return is_up, response.status_code, latency
+    except requests.RequestException as e:
+        print(f"Request to {url} failed: {e}")
+        return False, None, None
 
 def main(file_path):
     config = load_config(file_path)
     domain_stats = defaultdict(lambda: {"up": 0, "total": 0})
-    
+
     try:
         while True:
             for endpoint in config:
                 domain = urlparse(endpoint["url"]).netloc
-                is_up = check_endpoint(endpoint)
-                
+                is_up, status_code, latency = check_endpoint(endpoint)
+
                 domain_stats[domain]["total"] += 1
                 if is_up:
                     domain_stats[domain]["up"] += 1
-            
+
             for domain, stats in domain_stats.items():
                 availability = round(100 * stats["up"] / stats["total"])
                 print(f"{domain} has {availability}% availability percentage")
-            
+
             time.sleep(15)
     except KeyboardInterrupt:
         print("\nProgram terminated by user.")
